@@ -5,15 +5,6 @@
 
 int main(int argc, char* argv[]) {
 
-	GENERIC_VECTOR hVector;
-	hVector = generic_vector_init_default()
-	
-	
-
-
-
-
-	/*	
 	MY_STRING arr[100];
 
 	for (int i = 0; i < 100; i++) {
@@ -42,8 +33,6 @@ int main(int argc, char* argv[]) {
         	my_string_insertion(arr[i], stdout);
 		my_string_destroy(&(arr[i]));
 	}
-	*/
-
 	/*
 	MY_STRING hString = NULL;
 	hString = my_string_init_c_string("hello");
