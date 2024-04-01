@@ -4,7 +4,64 @@
 #include "generic_vector.h"
 
 int main(int argc, char* argv[]) {
+	
+	GENERIC_VECTOR arr[30];
+	for (int i = 0; i < 30; i++) {
+		arr[i] = generic_vector_init_default(my_string_init_copy, my_string_destroy);
+		if (arr[i] == NULL) {
+			printf("CAMI IT FAILED\n");
+			exit(1);
+		}
+	}
 
+	FILE* fp = fopen("dictionary.txt", "r");
+	char ch = fgetc(fp);
+	while(ch != EOF) {
+		ungetc(ch, fp);
+		MY_STRING hString = my_string_init_default();
+		my_string_extraction(hString, fp);
+		int size = my_string_get_size(hString);
+		if (generic_vector_push_back(arr[size - 1], hString) == FAILURE) {
+			printf("CAMI WHY DID VECTOR PUSH BACK FAIL\n");
+			exit(1);
+		}
+
+		my_string_destroy(&hString);
+		ch = fgetc(fp);
+	}
+
+	for (int i = 0; i < 30; i++) {
+		if (atoi(argv[1]) == i + 1) {
+			printf("CAMI THIS IS %d CHECK THE SIZE %d NOW THE CAP %d\n", i + 1, generic_vector_get_size(arr[i]), generic_vector_get_capacity(arr[i]));
+		}
+		while(!generic_vector_is_empty(arr[i])) {
+			generic_vector_pop_back(arr[i]);
+		}
+
+		generic_vector_destroy(arr + i);
+	}
+
+	fclose(fp);
+	
+	MY_STRING hMy_string7 = NULL;
+        FILE* fp3;
+        hMy_string7 = my_string_init_default();
+        fp3 = fopen("dictionary.txt", "r");
+	int num = 0;
+        while(my_string_extraction(hMy_string7, fp3)) {
+		if (my_string_get_size(hMy_string7) == atoi(argv[1])) {
+			my_string_insertion(hMy_string7, stdout);
+			num++;
+		}
+        }
+
+	printf("CAMI this %d\n", num);
+
+        my_string_destroy(&hMy_string7);
+        fclose(fp3);	
+	
+	
+	/*
 	MY_STRING arr[100];
 
 	for (int i = 0; i < 100; i++) {
@@ -31,8 +88,11 @@ int main(int argc, char* argv[]) {
 
 	for (int i = 0; i < 100; i++) {	
         	my_string_insertion(arr[i], stdout);
+		printf("\n");
 		my_string_destroy(&(arr[i]));
 	}
+	*/
+
 	/*
 	MY_STRING hString = NULL;
 	hString = my_string_init_c_string("hello");
@@ -167,18 +227,6 @@ int main(int argc, char* argv[]) {
 
 	my_string_destroy(&hMy_string5);
 	my_string_destroy(&hMy_string6);
-	*/
-	/*
-	MY_STRING hMy_string7 = NULL;
-        FILE* fp;
-        hMy_string7 = my_string_init_default();
-        fp = fopen("dictionary.txt", "r");
-        while(my_string_extraction(hMy_string7, fp)) {
-                my_string_insertion(hMy_string7, stdout);
-        }
-
-        my_string_destroy(&hMy_string7);
-        fclose(fp);	
 	*/
 	/*
 	MY_STRING hMy_string8 = NULL;
