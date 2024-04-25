@@ -22,6 +22,7 @@ ITEM* generic_vector_at(GENERIC_VECTOR hVector, int index);
 
 int generic_vector_get_size(GENERIC_VECTOR hVector);
 int generic_vector_get_capacity(GENERIC_VECTOR hVector);
+GENERIC_VECTOR generic_vector_init_copy(GENERIC_VECTOR hVector);
 
 void generic_vector_destroy(GENERIC_VECTOR* phVector);
 

@@ -10,6 +10,8 @@ struct word {
 
 typedef struct word Word;
 
+
+
 MY_STRING my_string_init_default(void) {
         Word* pWord = (Word*)malloc(sizeof(Word));
 	if (pWord != NULL) {

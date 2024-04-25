@@ -39,6 +39,48 @@ GENERIC_VECTOR generic_vector_init_default(
 	return pVector;
 }
 
+GENERIC_VECTOR generic_vector_init_copy(GENERIC_VECTOR hVector) {
+	int i;
+	Generic_vector* pVector = (Generic_vector*)hVector;
+	Generic_vector* pVectorCopy;
+	pVectorCopy = malloc(sizeof(Generic_vector));
+	if (pVectorCopy != NULL)
+	{
+		pVectorCopy->size = pVector->size;
+		pVectorCopy->capacity = pVector->capacity;
+		pVectorCopy->init_copy = pVector->init_copy;
+		pVectorCopy->destroy = pVector->destroy;
+		pVectorCopy->data = (ITEM*)malloc(sizeof(ITEM) * pVectorCopy->capacity);
+		if (pVectorCopy->data == NULL)
+		{
+			free(pVectorCopy);
+			return NULL;
+		}
+
+		for (i = 0; i < pVectorCopy->size; i++)
+		{
+			pVectorCopy->data[i] = pVector->init_copy(pVector->data[i]);
+			if (pVectorCopy->data[i] == NULL) {
+				int j;
+				for (j = 0; j < i; j++) {
+					pVectorCopy->destroy(&(pVectorCopy->data[i]));
+				}
+
+				free(pVectorCopy->data);
+				free(pVectorCopy);
+				return NULL;
+			}
+		}
+
+		for (i = pVectorCopy->size; i < pVectorCopy->capacity; i++) {
+			pVectorCopy->data[i] = NULL;
+		}
+	}
+
+	return pVectorCopy;
+}
+
+
 Boolean generic_vector_is_empty(GENERIC_VECTOR hVector)
 {
 	Generic_vector* pVector = (Generic_vector*)hVector;
