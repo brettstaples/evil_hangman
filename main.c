@@ -19,10 +19,11 @@ int main(int argc, char* argv[]) {
 	int size;
 	int totals[30] = {0};
 	GENERIC_VECTOR arr[30];
-    FILE* fp;
-    char ch;
-    char playAgain = 'y';
-    for (i = 0; i < 30; i++) {
+   	FILE* fp;
+   	char ch;
+   	char playAgain = 'y';
+	MY_STRING hString;
+   	for (i = 0; i < 30; i++) {
 		arr[i] = generic_vector_init_default(my_string_init_copy, my_string_destroy);
 		if (arr[i] == NULL) {
 			printf("CAMI IT FAILED\n");
@@ -30,11 +31,11 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	fp= fopen("dictionary.txt", "r");
+	fp = fopen("dictionary.txt", "r");
 	ch = fgetc(fp);
 	while(ch != EOF) {
 		ungetc(ch, fp);
-		MY_STRING hString = my_string_init_default();
+		hString = my_string_init_default();
 		if (hString == NULL) {
 			printf("my_string_init_default failed\n");
 			exit(1);
@@ -55,13 +56,13 @@ int main(int argc, char* argv[]) {
 
 	fclose(fp);
 
-    while (playAgain == 'y') {
-        setUpGame(arr, totals);
-        playAgain = 0;
-        while (playAgain != 'y' && playAgain != 'n') {
-            printf("Would you like to play again (y/n): ");
-            scanf("%c", &playAgain);
-            clear_keyboard_buffer();
+   	while (playAgain == 'y') {
+       		setUpGame(arr, totals);
+        	playAgain = 0;
+        	while (playAgain != 'y' && playAgain != 'n') {
+            		printf("Would you like to play again (y/n): ");
+            		scanf("%c", &playAgain);
+            		clear_keyboard_buffer();
         }
     }
 
@@ -77,67 +78,69 @@ void setUpGame(GENERIC_VECTOR arr[], int totals[]) {
 	int numberOfLetters = 0;
 	int guessNum = 0;
 	char runningTotal = 0;
-    int noc = 0;
+   	int noc = 0;
+	GENERIC_VECTOR hVector;
 
-    printf("Please input a how many letters: ");
-    while (noc == 0 || numberOfLetters <= 1 || numberOfLetters >= 30 || totals[numberOfLetters - 1] <= 0) {
-        noc = scanf("%d", &numberOfLetters);
-        clear_keyboard_buffer();
+    	printf("Please input a how many letters: ");
+   	while (noc == 0 || numberOfLetters <= 1 || numberOfLetters >= 30 || totals[numberOfLetters - 1] <= 0) {
+        	noc = scanf("%d", &numberOfLetters);
+        	clear_keyboard_buffer();
         if (noc == 0 || numberOfLetters <= 1 || numberOfLetters >= 30 || totals[numberOfLetters - 1] <= 0) {
             printf("Incorrect amount, Please input a how many letters: ");
         }
     }
 
 	printf("How many guesses: ");
-    while(noc == 0 || guessNum <= 0) {
-        noc = scanf("%d", &guessNum);
-        clear_keyboard_buffer();
+   	while(noc == 0 || guessNum <= 0) {
+        	noc = scanf("%d", &guessNum);
+        	clear_keyboard_buffer();
         if (noc == 0 || guessNum <= 0) {
             printf("Incorrect amount, Please choose a positive number of guesses: ");
         }
     }
 
 	printf("Would you like a running total of words remaining? (y/n): ");
-    while (noc == 0 || (runningTotal != 'y' && runningTotal != 'n')) {
-        noc = scanf("%c", &runningTotal);
-        clear_keyboard_buffer();
+    	while (noc == 0 || (runningTotal != 'y' && runningTotal != 'n')) {
+        	noc = scanf("%c", &runningTotal);
+        	clear_keyboard_buffer();
         if (noc == 0 || (runningTotal != 'y' && runningTotal != 'n')) {
             printf("Please input (y/n):");
         }
     }
 
-	GENERIC_VECTOR hVector = generic_vector_init_copy(arr[numberOfLetters - 1]);
+	hVector = generic_vector_init_copy(arr[numberOfLetters - 1]);
 	if (hVector == NULL) {
 		printf("hVector is null when copy\n");
 		exit(1);
 	}
 
-    play(hVector, numberOfLetters, guessNum, runningTotal == 'y', totals[numberOfLetters - 1]);
+   	play(hVector, numberOfLetters, guessNum, runningTotal == 'y', totals[numberOfLetters - 1]);
 }
 
 void play(GENERIC_VECTOR words, int letters, int guesses, int debugging, int len) {
 	int i;
 	char correctWord[letters + 1];
-	int endGame = 0;
-    int totalFamilies = 1 << letters;
-    char guess;
-    int firstGuess = 1;
-    int guessedLetters[26] = { 0 };
-    for (i = 0; i < letters; i++) {
-        correctWord[i] = '_';
-    }
+	int endGame = 0;	
+    	int totalFamilies = 1 << letters;
+    	char guess;
+    	int firstGuess = 1;
+    	int guessedLetters[26] = { 0 };
+    	
+	for (i = 0; i < letters; i++) {
+        	correctWord[i] = '_';
+    	}
 
-    correctWord[letters] = '\0';
+    	correctWord[letters] = '\0';
 
-    while (!endGame) {
-        guess = 0;
-        GameResult gameResult;
-        GENERIC_VECTOR* families = NULL;
-        GENERIC_VECTOR* longest = NULL;
+    	while (!endGame) {
+        	guess = 0;
+        	GameResult gameResult;
+        	GENERIC_VECTOR* families = NULL;
+        	GENERIC_VECTOR* longest = NULL;
         if (debugging) {
             printf("Total words: %d\n", generic_vector_get_size(words));
         }
-
+	
         while (!isalpha(guess) || (guess >= 'a' && guess <= 'z' && guessedLetters[guess - 'a'])) {
             if (!firstGuess) {
                 printf("Guesses so far: ");
@@ -150,11 +153,11 @@ void play(GENERIC_VECTOR words, int letters, int guesses, int debugging, int len
                 printf("\n");
             }
 
-            printf("What is your guess: ");
+       	    printf("What is your guess: ");
             scanf("%c", &guess);
             clear_keyboard_buffer();
             if (!isalpha(guess)) {
-                printf("Please input a letter as a guess: ");
+                printf("That was not a letter guess!!!\n");
             } else {
                 guess = tolower(guess);
                 if (guessedLetters[guess - 'a']) {
@@ -245,8 +248,8 @@ void play(GENERIC_VECTOR words, int letters, int guesses, int debugging, int len
 GENERIC_VECTOR* partition(GENERIC_VECTOR words, char guess, int letters, int len) {
 	int i;
 	int j;
-    int totalPermutations = 1 << letters;
-    char** permutations = permute(guess, letters);
+    	int totalPermutations = 1 << letters;
+    	char** permutations = permute(guess, letters);
 	Status res;
 	GENERIC_VECTOR* result = (GENERIC_VECTOR*)malloc(totalPermutations * sizeof(GENERIC_VECTOR));
 	if (result == NULL) {
